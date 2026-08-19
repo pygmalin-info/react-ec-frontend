@@ -1,0 +1,287 @@
+/*
+  この教材のテーマは「設計」であってスタイリングではないため、CSS は意図的に最小限にしている。
+  CSS Modules ではなく1枚のグローバルCSSにしているのも、
+  「どのファイルを読めば設計が分かるか」の邪魔をしないため。
+*/
+
+:root {
+  --color-text: #1f2328;
+  --color-muted: #656d76;
+  --color-border: #d0d7de;
+  --color-bg: #ffffff;
+  --color-bg-subtle: #f6f8fa;
+  --color-primary: #1f6feb;
+  --color-danger: #cf222e;
+  --color-success: #1a7f37;
+  --radius: 6px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: var(--color-text);
+  background: var(--color-bg);
+  font-family: system-ui, -apple-system, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+  line-height: 1.6;
+}
+
+a {
+  color: var(--color-primary);
+}
+
+.layout__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.layout__header--admin {
+  background: #1f2328;
+  color: #ffffff;
+}
+
+.layout__header--admin a {
+  color: #9ecbff;
+}
+
+.layout__nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.layout__main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.cart-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  margin-left: 6px;
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.product-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  height: 100%;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.product-card__image {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--color-bg-subtle);
+  border-radius: var(--radius);
+}
+
+.product-card__name {
+  margin: 4px 0 0;
+  font-size: 15px;
+}
+
+.product-card__price {
+  font-weight: 700;
+}
+
+.product-card__meta {
+  color: var(--color-muted);
+  font-size: 13px;
+}
+
+.badge-soldout {
+  align-self: flex-start;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--color-bg-subtle);
+  color: var(--color-danger);
+  font-size: 12px;
+}
+
+.cart-line {
+  display: grid;
+  grid-template-columns: 96px 1fr auto;
+  gap: 16px;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.cart-line__image {
+  width: 96px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--color-bg-subtle);
+  border-radius: var(--radius);
+}
+
+.cart-total {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 16px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.field__label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.field__control {
+  padding: 8px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font: inherit;
+}
+
+.field__control[aria-invalid='true'] {
+  border-color: var(--color-danger);
+}
+
+.field__hint {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 12px;
+}
+
+.field__error {
+  margin: 0;
+  color: var(--color-danger);
+  font-size: 13px;
+}
+
+.button {
+  padding: 8px 16px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  font: inherit;
+  cursor: pointer;
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.button--primary {
+  background: var(--color-primary);
+  color: #ffffff;
+}
+
+.button--secondary {
+  background: var(--color-bg);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+.button--danger {
+  background: var(--color-danger);
+  color: #ffffff;
+}
+
+.alert {
+  padding: 12px 16px;
+  margin: 12px 0;
+  border: 1px solid var(--color-danger);
+  border-radius: var(--radius);
+  background: #fff5f5;
+}
+
+.alert--info {
+  border-color: var(--color-primary);
+  background: #f0f6ff;
+}
+
+.alert--success {
+  border-color: var(--color-success);
+  background: #f0fbf3;
+}
+
+.alert p {
+  margin: 0 0 8px;
+}
+
+.alert p:last-child {
+  margin-bottom: 0;
+}
+
+.modal {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 20px;
+  max-width: 420px;
+}
+
+.modal::backdrop {
+  background: rgb(0 0 0 / 40%);
+}
+
+.modal__title {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 8px;
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+}
+
+.empty-state {
+  padding: 48px 0;
+  color: var(--color-muted);
+  text-align: center;
+}
+
+.status-text {
+  color: var(--color-muted);
+}
