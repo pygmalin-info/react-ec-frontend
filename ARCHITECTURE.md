@@ -1,17 +1,19 @@
 # ARCHITECTURE
 
-このプロジェクトは 2つの目的を持っています。
+このプロジェクトには、2つの目的があります。
 
-1. React 研修生が EC サイトを題材にフロントエンド開発を行うための土台
-2. React 経験者が「なぜこの設計になっているのか」を考えるためのコードリーディング教材
+1. React 研修生が EC サイトを題材に、フロントエンド開発を進めるための土台
+2. React 経験者が「なぜこの設計になっているのか」を考えながらコードを読むための教材
 
 **この文書は地図であって、答えではありません。**
-「なぜそうしたのか」はコード側のコメントに書いてあります。
-先に答えを読まず、まず自分で追いかけてみてください。
 
-追いかけ方（grep のしかた、Devtools の使い方、型のたどり方）は
-**[docs/READING_GUIDE.md](./docs/READING_GUIDE.md)** にまとめてあります。
-読んだあとの練習には **[docs/DEBUG_EXERCISES.md](./docs/DEBUG_EXERCISES.md)**（バグ改修演習12問）を使ってください。
+「なぜそうしたのか」はコード側のコメントに書いてあります。
+先に答えを見るのではなく、まず自分でコードを追ってみてください。
+
+コードの追い方（grep のしかた、Devtools の使い方、型のたどり方）は
+**[docs/READING_GUIDE.md](./docs/READING_GUIDE.md)** にまとめています。
+
+読み終わったあとは、**[docs/DEBUG_EXERCISES.md](./docs/DEBUG_EXERCISES.md)** のバグ改修演習12問にも取り組んでみてください。
 
 ---
 
@@ -19,7 +21,7 @@
 
 ### ディレクトリ構成
 
-```
+```text
 src/
 ├── app/          アプリ全体の配線（Router / Provider / レイアウト / エラー境界）
 ├── pages/        画面の組み立て
@@ -32,17 +34,17 @@ src/
 
 ### 各レイヤーの責務
 
-| レイヤー | 担当すること | 置いてはいけないもの |
-|---|---|---|
-| `app` | 起動、Provider の合成、ルーティング、レイアウト、想定外エラーの受け皿 | 個別機能の業務ロジック |
-| `pages` | 「この画面が何でできているか」を示す組み立て | API 呼び出し、バリデーション、大量の state |
-| `features` | 1つの操作（ログインする、カートに追加する、商品を登録する…） | 他の feature への依存 |
-| `entities` | ドメインのモデル・取得 Query・表示部品・ドメインの計算 | 「操作」の実装 |
-| `shared` | HTTP クライアント、エラーの型、汎用 UI、設定 | Product / Cart 固有の知識 |
+| レイヤー       | 担当すること                                  | 置いてはいけないもの                 |
+| ---------- | --------------------------------------- | -------------------------- |
+| `app`      | 起動、Provider の合成、ルーティング、レイアウト、想定外エラーの受け皿 | 個別機能の業務ロジック                |
+| `pages`    | 「この画面が何でできているか」を示す組み立て                  | API 呼び出し、バリデーション、大量の state |
+| `features` | 1つの操作（ログインする、カートに追加する、商品を登録する…）         | 他の feature への依存            |
+| `entities` | ドメインのモデル・取得 Query・表示部品・ドメインの計算          | 「操作」の実装                    |
+| `shared`   | HTTP クライアント、エラーの型、汎用 UI、設定              | Product / Cart 固有の知識       |
 
 ### 依存方向
 
-```
+```text
 app / pages
      ↓
   features
@@ -52,44 +54,48 @@ app / pages
    shared
 ```
 
-- 上から下への参照のみ許可
-- **feature 同士・entity 同士の横断参照も禁止**
-- 循環依存禁止
+* 上から下への参照だけを許可
+* **feature 同士・entity 同士の横断参照も禁止**
+* 循環依存は禁止
 
-このルールは `eslint.config.js` が機械的に検査します（Java の ArchUnit と同じ考え方）。
-`npm run lint` で違反が検出されます。**破ってみて、どんなメッセージが出るか確かめてみてください。**
+このルールは `eslint.config.js` で機械的にチェックしています（Java の ArchUnit と同じ考え方です）。
 
-例外が1つだけあります。どこで、なぜ許可されているかは `eslint.config.js` を読んでください。
+`npm run lint` を実行すると、違反を検出できます。
+**あえてルールを破って、どんなメッセージが出るか確認してみてください。**
+
+例外は1つだけあります。
+どこで、なぜ許可されているのかは `eslint.config.js` を読んでみてください。
 
 ### 主要ライブラリ
 
-| ライブラリ | 用途 |
-|---|---|
-| React 19 / TypeScript / Vite | 基盤 |
-| React Router v7 | ルーティング、レイアウト切り替え、画面の保護 |
-| TanStack Query v5 | Server State（サーバーから取得したデータ） |
-| React Hook Form + Zod | フォームの状態管理とバリデーション |
-| Axios | HTTP 通信 |
-| TanStack Query Devtools | Query Cache の中身を目で確認する（開発時のみ・画面左下） |
-| MSW | 開発用モックバックエンド、テストでの API 差し替え |
-| Vitest + Testing Library | テスト |
-| eslint-plugin-boundaries | 依存方向の検査 |
+| ライブラリ                        | 用途                               |
+| ---------------------------- | -------------------------------- |
+| React 19 / TypeScript / Vite | 基盤                               |
+| React Router v7              | ルーティング、レイアウト切り替え、画面の保護           |
+| TanStack Query v5            | Server State（サーバーから取得したデータ）      |
+| React Hook Form + Zod        | フォームの状態管理とバリデーション                |
+| Axios                        | HTTP 通信                          |
+| TanStack Query Devtools      | Query Cache の中身を確認する（開発時のみ・画面左下） |
+| MSW                          | 開発用モックバックエンド、テストでの API 差し替え      |
+| Vitest + Testing Library     | テスト                              |
+| eslint-plugin-boundaries     | 依存方向の検査                          |
 
 ### API 仕様
 
 このフロントエンドが前提としている API の契約は **[`docs/API_DESIGN.md`](./docs/API_DESIGN.md)** にあります。
-開発中は `src/mocks/` がその契約どおりに応答します。
+
+開発中は `src/mocks/` がその契約に沿って応答します。
 
 ---
 
 ## 2. Reading Guide
 
-### 入口：「商品をカートに追加する」を1本追いかける
+### 入口：「商品をカートに追加する」を1本追ってみる
 
-以下のファイルを **この順番で** 開いてください。
-各ステップに問いを置いてあります。答えは書いていません。
+まずは以下のファイルを **この順番で** 開いてください。
+それぞれに問いを置いてあります。ここでは答えを書いていません。
 
-```
+```text
 ① src/pages/ProductDetailPage.tsx
         ↓
 ② src/features/add-to-cart/ui/AddToCartButton.tsx
@@ -107,25 +113,27 @@ app / pages
 ⑧ src/app/layouts/ShopLayout.tsx     （ヘッダのカートバッジ）
 ```
 
-| ステップ | 見るもの | 問い |
-|---|---|---|
-| ① | ページが何を組み立てているか | このページに API 呼び出しが1行も無いのはなぜ？ |
-| ② | ボタンが受け取っている props | なぜ `product` 全体ではなく `productId` だけ？ |
-| ③ | `onSuccess` の中身 | `invalidateQueries` は「何を」しているのか？ |
-| ④ | 送信している内容 | 「同じ商品なら数量を足す」処理はどこにも無い。誰がやっている？ |
-| ⑤ | interceptor 2つ | トークンはどこで載っている？ エラーはどこで形が変わる？ |
-| ⑥ | `addCartItem` | ここでの判断がフロントの実装をどう単純にしている？ |
-| ⑦ | `useCart` と `useCartItemCount` | 2つの hook が同じ `queryKey` を使っているのはなぜ？ |
-| ⑧ | バッジの数字 | ②と⑧は親子でも兄弟でもない。なぜ片方の操作でもう片方が変わる？ |
+| ステップ | 見るもの                           | 問い                                  |
+| ---- | ------------------------------ | ----------------------------------- |
+| ①    | ページが何を組み立てているか                 | このページに API 呼び出しが1行も無いのはなぜ？          |
+| ②    | ボタンが受け取っている props              | なぜ `product` 全体ではなく `productId` だけ？ |
+| ③    | `onSuccess` の中身                | `invalidateQueries` は「何を」しているのか？    |
+| ④    | 送信している内容                       | 「同じ商品なら数量を足す」処理はどこにも無い。誰がやっている？     |
+| ⑤    | interceptor 2つ                 | トークンはどこで載っている？ エラーはどこで形が変わる？        |
+| ⑥    | `addCartItem`                  | ここでの判断がフロントの実装をどう単純にしている？           |
+| ⑦    | `useCart` と `useCartItemCount` | 2つの hook が同じ `queryKey` を使っているのはなぜ？ |
+| ⑧    | バッジの数字                         | ②と⑧は親子でも兄弟でもない。なぜ片方の操作でもう片方が変わる？    |
 
-追いかけ終わったら、`src/features/add-to-cart/ui/AddToCartButton.test.tsx` を読んでください。
-上の流れがそのままテストになっています。
+一通り追い終わったら、`src/features/add-to-cart/ui/AddToCartButton.test.tsx` も読んでください。
+
+上で追った流れが、そのままテストになっています。
 
 ---
 
 ## 3. 自分で考えてほしい問い
 
-コードを読んで、**自分の言葉で説明できるか**を試してください。
+コードを読んで、**自分の言葉で説明できるか**試してみてください。
+
 （社内の「React EC 課題テスト」の設問に対応しています）
 
 ### 状態の持ち主について
@@ -172,59 +180,76 @@ app / pages
 
 ## 4. 演習課題
 
-研修で手を動かす場合の題材です。難易度順に並んでいます。
+研修で手を動かす場合の題材です。難易度順に並べています。
 
 1. **商品一覧にページネーションを追加する**
+
    `GET /products` は `page` と `totalCount` を返します。
-   `queryKey` に何を含めるべきか、が考えどころです。
+
+   `queryKey` に何を含めるべきか、というところが考えどころです。
 
 2. **カート追加を Optimistic Update に書き換える**
+
    現在は `invalidateQueries` のみです。
+
    `onMutate` / `onError` / `onSettled` を使って書き換え、
    **書き換えたあとに読みやすくなったか / 読みにくくなったか**を議論してください。
+
    （この教材ではあえて使っていません。その判断が妥当かを検証する課題です）
 
 3. **お気に入り機能（`toggle-product-like`）を追加する**
-   API から作る必要があります。`docs/API_DESIGN.md` に追記してから、
+
+   API から作る必要があります。まず `docs/API_DESIGN.md` に追記してから、
    `src/mocks` → `entities` → `features` の順に実装してください。
-   新しい feature を作るとき、どこに何を置くか迷ったら
-   「2つ以上の feature が欲しがるか？」を基準にしてください。
+
+   新しい feature を作るとき、どこに何を置くか迷ったら、
+   「2つ以上の feature が欲しがるか？」を基準にしてみてください。
 
 4. **依存方向をわざと破る**
+
    `src/entities/product` から `src/features/add-to-cart` を import して `npm run lint` を実行し、
-   何が起きるか確認してください。そのうえで「なぜこの向きが禁止されているのか」を説明してください。
+   何が起きるか確認してください。
+
+   そのうえで、「なぜこの向きが禁止されているのか」を説明してください。
 
 5. **バックエンドを差し替える**
+
    `.env` の `VITE_USE_MOCK=false` にして、実際の API に繋いでください。
-   変更が必要になったファイルが何個あったかを数えてください。
-   （それがこの設計で「守れたもの」の大きさです）
+
+   変更が必要になったファイルが何個あったか数えてみてください。
+   （それが、この設計で「守れたもの」の大きさです）
 
 ---
 
 ## 5. この設計であえて採用しなかったもの
 
-理由を考えながら読んでください。必要になったら採用してよい、という前提です。
+理由を考えながら読んでください。
 
-- Repository パターン / DI コンテナ
-- Redux / Zustand などのグローバル state ライブラリ
-- Atomic Design（atoms / molecules / organisms）
-- すべてのレスポンスに Mapper を作ること
-- すべての `useQuery` を custom hook にすること
-- Optimistic Update の全面採用
-- `Result` 型 / neverthrow
-- すべてのフォルダへの barrel（`index.ts`）
-- Suspense + ErrorBoundary の全面採用
-- UI ライブラリ
+「必要になったら採用してよい」という前提です。
+
+* Repository パターン / DI コンテナ
+* Redux / Zustand などのグローバル state ライブラリ
+* Atomic Design（atoms / molecules / organisms）
+* すべてのレスポンスに Mapper を作ること
+* すべての `useQuery` を custom hook にすること
+* Optimistic Update の全面採用
+* `Result` 型 / neverthrow
+* すべてのフォルダへの barrel（`index.ts`）
+* Suspense + ErrorBoundary の全面採用
+* UI ライブラリ
 
 ---
 
 ## 6. ESLint が守っているルール
 
-`eslint.config.js` に3つだけ書いてあります。
+`eslint.config.js` には3つのルールがあります。
 
 1. **レイヤーの依存方向**（`boundaries/dependencies`）
 2. **循環依存の禁止**（`import-x/no-cycle`）
 3. **`axios` を import できる場所の限定**（`no-restricted-imports`）
 
-ルールを増やしすぎると「ESLint を黙らせる作業」になるため、この3つに絞っています。
-それぞれが「何を守っているのか」を、設定ファイルのコメントと合わせて確認してください。
+ルールを増やしすぎると、「ESLint を黙らせる作業」になってしまいます。
+そのため、ここでは3つに絞っています。
+
+それぞれが「何を守るためのルールなのか」を、設定ファイルのコメントと合わせて確認してみてください。
+
